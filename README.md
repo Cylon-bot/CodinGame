@@ -1,2 +1,2 @@
 # CodinGame
-Each branch correspond to one exercise/bot on codingame
+Each branch name correspond to the name of one exercise/bot on codingame.
