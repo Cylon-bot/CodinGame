@@ -1,12 +1,17 @@
 use std::{collections::HashMap, io};
 
-use crate::parse_input;
+use crate::{math_tools::find_distance, parse_input};
 
+use super::human::Human;
+
+#[derive(Clone, Debug)]
 pub struct Zombie {
     pub x: i32,
     pub y: i32,
     pub next_x: i32,
     pub next_y: i32,
+    pub nearest_human_id: i32,
+    pub distance_to_nearest_human: i32,
 }
 impl Zombie {
     pub fn new(x: i32, y: i32, next_x: i32, next_y: i32) -> Self {
@@ -15,6 +20,8 @@ impl Zombie {
             y,
             next_x,
             next_y,
+            nearest_human_id: 0,
+            distance_to_nearest_human: 0,
         }
     }
     fn change_position(&mut self, x: i32, y: i32) {
@@ -25,6 +32,19 @@ impl Zombie {
     fn change_next_position(&mut self, x: i32, y: i32) {
         self.next_x = x;
         self.next_y = y;
+    }
+
+    pub fn find_nearest_human(&mut self, humans: &HashMap<i32, Human>) {
+        let mut distance_to_human = Vec::new();
+        for human in humans.iter() {
+            let distance = find_distance(human.1.x, human.1.y, self.x, self.y);
+            distance_to_human.push((human.0, distance))
+        }
+        // Find the tuple with the minimum second element
+        if let Some(min_tuple) = distance_to_human.iter().min_by_key(|&tuple| tuple.1) {
+            self.nearest_human_id = *min_tuple.0;
+            self.distance_to_nearest_human = min_tuple.1;
+        }
     }
 }
 
