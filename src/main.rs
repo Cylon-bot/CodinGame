@@ -3,6 +3,7 @@ use std::collections::HashMap;
 use entities::{ash::Ash, human::get_humans, zombie::get_zombies};
 mod entities;
 mod math_tools;
+
 fn main() {
     // game loop
     let mut ash = Ash::new();
@@ -16,6 +17,7 @@ fn main() {
         for zombie in zombies.values_mut() {
             zombie.find_nearest_human(&humans);
         }
+        ash.find_nearest_human(&humans);
         if let Some(nearest_zombie_from_human) = zombies
             .clone()
             .into_values()
@@ -23,10 +25,9 @@ fn main() {
         {
             println!(
                 "{:?} {:?} I WILL KILL YOU",
-                nearest_zombie_from_human.next_x, nearest_zombie_from_human.next_y
+                humans[&ash.nearest_human_id].x, humans[&ash.nearest_human_id].y,
             );
         }
-
         // Write an action using println!("message...");
         // To debug: eprintln!("Debug message...");
     }

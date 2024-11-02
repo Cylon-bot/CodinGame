@@ -1,4 +1,7 @@
-use std::{collections::HashMap, io};
+use std::{
+    collections::{HashMap, HashSet},
+    io,
+};
 
 use crate::{math_tools::find_distance, parse_input};
 
@@ -52,6 +55,7 @@ pub fn get_zombies(zombies: &mut HashMap<i32, Zombie>) {
     let mut input_line = String::new();
     io::stdin().read_line(&mut input_line).unwrap();
     let zombie_count = parse_input!(input_line, i32);
+    let mut alive_zombies = Vec::new();
     for _ in 0..zombie_count as usize {
         let mut input_line = String::new();
         io::stdin().read_line(&mut input_line).unwrap();
@@ -68,5 +72,8 @@ pub fn get_zombies(zombies: &mut HashMap<i32, Zombie>) {
                 parse_input!(inputs[3], i32),
                 parse_input!(inputs[4], i32),
             ));
+        alive_zombies.push(parse_input!(inputs[0], i32).to_owned());
     }
+    let alive_zombies: HashSet<i32> = alive_zombies.into_iter().collect();
+    zombies.retain(|key, _| alive_zombies.contains(key));
 }
